@@ -1,0 +1,52 @@
+import math
+
+class MyMath:
+    def cleanup(data):
+        cleanup = []
+        for x in data:
+            if x != '':
+                x = float(x)
+                cleanup.append(x)
+        return cleanup
+
+    def mean(data):
+        newData = MyMath.cleanup(data)
+        mean = float(math.fsum(newData)/len(newData))
+        return mean
+
+    def median(data):
+        newData = sorted(MyMath.cleanup(data))
+        a = int((len(newData)/2 + .5))
+        b = int((len(newData)/2 - .5))
+        if len(newData) % 2 == 0:
+            return len(newData)/2
+        else:
+            return ((newData[a] + newData[b])/2)
+
+    def stdev(data):
+        total = 0
+        newData = MyMath.cleanup(data)
+        mean = MyMath.mean(data)
+        for x in newData:
+            number = (x - mean) ** 2
+            total = total + number
+        total = total/len(newData)
+        return math.sqrt(total)
+
+    def minimum(data):
+        newData = sorted(MyMath.cleanup(data))
+        minimum = newData[0]
+        return minimum
+
+    def maximum(data):
+        newData = sorted(MyMath.cleanup(data))
+        maximum = newData[-1]
+        return maximum
+
+'''
+list = ['12','','1', '6','','1','9']
+print(MyMath.mean(list))
+print(MyMath.median(list))
+print(MyMath.maximum(list))
+print(MyMath.minimum(list))
+'''
