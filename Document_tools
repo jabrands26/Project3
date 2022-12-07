@@ -48,7 +48,7 @@ class DataFile:
         return self.header
 
     def get_col_name(self, index):
-        return self.header(index)
+        return self.header[index]
 
     def get_col(self, col):
         new_list = []
@@ -72,8 +72,8 @@ class ReportGenerator:
 
     def generate(self, output_name):
         document = Document()
-        document.add_heading('heading', 0)
-        document.add_paragraph('description')
+        document.add_heading('Video Game Sales 2020', 0)
+        document.add_paragraph('This is a summary of video game sales information from 2020.')
 
         #DataFile.get_title()
         for col in self.datafile.get_process():
@@ -92,7 +92,7 @@ class ReportGenerator:
 
             row_cells3 = table.add_row().cells
             row_cells3[0].text = "Median"
-            mean = at.MyMath.mean(self.datafile.get_col(col))
+            mean = at.MyMath.median(self.datafile.get_col(col))
             row_cells3[1].text = str(mean)
 
             row_cells4 = table.add_row().cells
@@ -106,10 +106,3 @@ class ReportGenerator:
             row_cells5[1].text = str(max)
 
         document.save(output_name)
-
-        '''for col in self.datafile.get_col_name():
-            table = document.add_table(rows=1, cols=2)
-            row_cells = table.add_row().cells
-            row_cells[0].text = "Mean"
-            row_cells[1].text = at.MyMath.mean(DataFile.get_col(col)) + str(42)
-        document.save(output_name)'''
