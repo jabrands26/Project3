@@ -1,0 +1,115 @@
+import csv
+from docx import Document
+import analysis_tools as at
+
+class DataFile:
+    def __init__(self, filename, title):
+        self.filename = filename
+        self.title = title
+        self.description = None
+        self.process = []
+        self.data = []
+        self.header = None
+
+    def set_filename(self, filename):
+        self.filename = filename
+
+    def get_filename(self):
+        return self.filename
+
+    def set_title(self, title):
+        self.title = title
+
+    def get_title(self):
+        return self.title
+
+    def set_description(self, description):
+        self.description = description
+
+    def get_description(self):
+        return self.description
+
+    def set_process(self, process):
+        self.process = process
+
+    def get_process(self):
+        return self.process
+
+    def set_data(self, data):
+        self.data = data
+
+    def get_data(self):
+        return self.data
+
+    def set_header(self, header):
+        self.header = header
+
+    def get_header(self):
+        return self.header
+
+    def get_col_name(self, index):
+        return self.header(index)
+
+    def get_col(self, col):
+        new_list = []
+        for row in self.data:
+            new_list.append(row[col])
+        return new_list
+
+    def load(self):
+        data = []
+        with open(self.filename, encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                data.append(row)
+            self.header = data[0]
+            del(data[0])
+            self.data = data
+
+class ReportGenerator:
+    def __init__(self, datafile):
+        self.datafile = datafile
+
+    def generate(self, output_name):
+        document = Document()
+        document.add_heading('heading', 0)
+        document.add_paragraph('description')
+
+        #DataFile.get_title()
+        for col in self.datafile.get_process():
+            document.add_heading(self.datafile.get_col_name(col), 1)
+            table = document.add_table(rows=1, cols=2)
+
+            row_cells1 = table.add_row().cells
+            row_cells1[0].text = "Mean"
+            mean = at.MyMath.mean(self.datafile.get_col(col))
+            row_cells1[1].text = str(mean)
+
+            row_cells2 = table.add_row().cells
+            row_cells2[0].text = "Standard Deviation"
+            stDev = at.MyMath.stdev(self.datafile.get_col(col))
+            row_cells2[1].text = str(stDev)
+
+            row_cells3 = table.add_row().cells
+            row_cells3[0].text = "Median"
+            mean = at.MyMath.mean(self.datafile.get_col(col))
+            row_cells3[1].text = str(mean)
+
+            row_cells4 = table.add_row().cells
+            row_cells4[0].text = "Minimum"
+            min = at.MyMath.minimum(self.datafile.get_col(col))
+            row_cells4[1].text = str(min)
+
+            row_cells5 = table.add_row().cells
+            row_cells5[0].text = "Maximum"
+            max = at.MyMath.maximum(self.datafile.get_col(col))
+            row_cells5[1].text = str(max)
+
+        document.save(output_name)
+
+        '''for col in self.datafile.get_col_name():
+            table = document.add_table(rows=1, cols=2)
+            row_cells = table.add_row().cells
+            row_cells[0].text = "Mean"
+            row_cells[1].text = at.MyMath.mean(DataFile.get_col(col)) + str(42)
+        document.save(output_name)'''
